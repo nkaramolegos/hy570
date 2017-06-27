@@ -5,8 +5,8 @@ function [BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, 
 P=length(SNR_vector);
 num_bits_wrong_LS=zeros(P,1);
 num_bits_wrong_LMS=zeros(P,1);
-num_bits_wrong_RLS=zeros(P,1);
 num_bits_wrong_NLMS=zeros(P,1);
+num_bits_wrong_RLS=zeros(P,1);
 
 for j=1:P
         noise_var= (2/3*(qam-1))./  (10^ (SNR_vector(j)/10)); % for QAM modulation, note that real and image part of the noise have noise_var/2. So the final noise is noise_var
@@ -33,7 +33,6 @@ for j=1:P
             % transmit
             [y, h] = transmit_packet(x, noise_var, channel_var, L, N, M, CP_len);
 
-
             % the desired responce is the received signal for the trainning symbols
             d=y(CP_len+1:M+CP_len);
             % input to the filter
@@ -56,7 +55,6 @@ for j=1:P
             % equalization as mentioned)
             r= Y_data.*conj(H_est)./(abs(H_est).^2);
 
-
             num_bits_wrong_LS(j) = num_bits_wrong_LS(j) + demodulate(r, qam, N, data_bitsIn);
 
             %% LMS
@@ -76,11 +74,10 @@ for j=1:P
             % equalization as mentioned)
             r= Y_data.*conj(H_est)./(abs(H_est).^2);
 
-
             num_bits_wrong_LMS(j) = num_bits_wrong_LMS(j) + demodulate(r, qam, N, data_bitsIn);
             
             
-            % NLMS
+            %% NLMS
 
             [e_nlms, h_nlms] = NLMS(d, u, beta, L, epsilon);
 
@@ -118,18 +115,14 @@ for j=1:P
             % equalization as mentioned)
             r= Y_data.*conj(H_est)./(abs(H_est).^2);
 
-
             num_bits_wrong_RLS(j) = num_bits_wrong_RLS(j)+ demodulate(r, qam, N, data_bitsIn);
-
 
         end
         
-BER_LS(j)=num_bits_wrong_LS(j)/(log2(qam)*N*loops);
-BER_LMS(j)=num_bits_wrong_LMS(j)/(log2(qam)*N*loops);
-BER_RLS(j)=num_bits_wrong_RLS(j)/(log2(qam)*N*loops);
-BER_NLMS(j)=num_bits_wrong_NLMS(j)/(log2(qam)*N*loops);
-
-        
+        BER_LS(j)=num_bits_wrong_LS(j)/(log2(qam)*N*loops);
+        BER_LMS(j)=num_bits_wrong_LMS(j)/(log2(qam)*N*loops);
+        BER_RLS(j)=num_bits_wrong_RLS(j)/(log2(qam)*N*loops);
+        BER_NLMS(j)=num_bits_wrong_NLMS(j)/(log2(qam)*N*loops);
 end
 
 end
