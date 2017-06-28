@@ -6,9 +6,6 @@ mse_mat_LMS = zeros(loops,M);
 mse_mat_NLMS = zeros(loops,M);
 mse_mat_RLS = zeros(loops,M);
 
-
-        noise_var= (2/3*(qam-1))./  (10^ (SNR/10)); % for QAM modulation, note that real and image part of the noise have noise_var/2. So the final noise is noise_var
-
         for NumPackets=1:loops
 
             % create the packet and the trainning sequence
@@ -29,7 +26,7 @@ mse_mat_RLS = zeros(loops,M);
             x=[train_seq_cp; s_cp];
 
             % transmit
-            [y, h] = transmit_packet(x, noise_var, channel_var, L, N, M, CP_len);
+            [y, h] = transmit_packet(x, SNR, channel_var, L, N, M, CP_len);
 
 
             % the desired responce is the received signal for the trainning symbols

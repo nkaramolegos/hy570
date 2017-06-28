@@ -9,7 +9,7 @@ num_bits_wrong_NLMS=zeros(P,1);
 num_bits_wrong_RLS=zeros(P,1);
 
 for j=1:P
-        noise_var= (2/3*(qam-1))./  (10^ (SNR_vector(j)/10)); % for QAM modulation, note that real and image part of the noise have noise_var/2. So the final noise is noise_var
+        SNR=SNR_vector(j);
 
         for NumPackets=1:loops
 
@@ -31,7 +31,7 @@ for j=1:P
             x=[train_seq_cp; s_cp];
 
             % transmit
-            [y, h] = transmit_packet(x, noise_var, channel_var, L, N, M, CP_len);
+            [y, h] = transmit_packet(x, SNR, channel_var, L, N, M, CP_len);
 
             % the desired responce is the received signal for the trainning symbols
             d=y(CP_len+1:M+CP_len);

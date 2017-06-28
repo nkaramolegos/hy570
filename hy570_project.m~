@@ -160,7 +160,7 @@ grid on;
 title ('BER for Flat fading channel'); 
 xlabel ('SNR in dB');
 ylabel('Bit error probability');
-legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig2.fig')
 saveas(gcf,'./plots/fig2.eps','epsc')
 
@@ -176,7 +176,7 @@ grid on;
 title (sprintf('BER for frequency selective channel with %g taps',L)); 
 xlabel ('SNR in dB');
 ylabel('Bit error probability');
-legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig3.fig')
 saveas(gcf,'./plots/fig3.eps','epsc')
 
@@ -191,7 +191,7 @@ grid on;
 title (sprintf('BER for frequency selective channel with %g taps',L)); 
 xlabel ('SNR in dB');
 ylabel('Bit error probability');
-legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig4.fig')
 saveas(gcf,'./plots/fig4.eps','epsc')
 
@@ -208,7 +208,7 @@ grid on;
 title (sprintf('BER for frequency selective channel with %g taps',L)); 
 xlabel ('SNR in dB');
 ylabel('Bit error probability');
-legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig5.fig')
 saveas(gcf,'./plots/fig5.eps','epsc')
 
@@ -225,7 +225,7 @@ grid on;
 title (sprintf('BER for frequency selective channel with %g taps',L)); 
 xlabel ('SNR in dB');
 ylabel('Bit error probability');
-legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig6.fig')
 saveas(gcf,'./plots/fig6.eps','epsc')
 
@@ -290,7 +290,7 @@ lambda=0.98;
 
 c=9;
 for SNR=-10:10:10
-    fprintf('MSE for SNR %d\n',SNR);
+
     [MSE_LMS, MSE_NLMS, MSE_RLS] = calculate_MSE(loops, qam, L, N, M, CP_len, channel_var, SNR, mu, delta, lambda, epsilon, beta);
 
     figure;
