@@ -25,10 +25,10 @@ qam=4;
 % number of SYMBOLS to be transmitted, should be multiple of log2(qam)
 N=512;
 % number of training seq SYMBOLS, should be multiple of log2(qam) 
-M=256; 
+M=10; 
 % taps of the channel and length of cyclic prefix
 CP_len=8;
-L=1;
+L=4;
 channel_var=1;
 % white gaussian noise var (on receiver)
 noise_var=0.0;
@@ -40,7 +40,7 @@ mu=0.01;
 
 % for NLMS
 epsilon=10^-4;
-beta=0.8;
+beta=1;
 
 % for RLS
 delta=10^-4;
@@ -109,14 +109,6 @@ h_nlms
 h_rls
 
 figure
-plot(1:M, abs(e_lms),1:M, abs(e_nlms),'r', 1:M, abs(xi_rls),'g');
-grid on;
-title('Error abs');
-xlabel('Iteration');
-ylabel('Error');
-legend('LMS', 'NLMS', 'RLS');
-
-figure
 t(1)=subplot(3,2,1);
 stem(1:L,abs(h),'c','LineWidth',1.5);
 title('Theoretical');
@@ -146,105 +138,157 @@ grid on;
 pos = get(t,'Position');
 new = mean(cellfun(@(v)v(1),pos(1:2)));
 set(t(5),'Position',[new,pos{end}(2:end)])
-
-% return;
+saveas(gcf,'./plots/fig1.fig')
+saveas(gcf,'./plots/fig1.eps','epsc')
 
 % % BER
 
-loops=1000;
+loops=10000;
 SNRdb_min=-10;
 SNRdb_max=20;
 step_db=2;
 SNR_vector = SNRdb_min:step_db:SNRdb_max;
 
 % flat fading channel
-% disp('Flat fading channel');
-% L=1;
-% [BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
-% 
-% figure;
-% semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
-% grid on; 
-% title ('BER for Flat fading channel'); 
-% xlabel ('SNR in dB');
-% ylabel('Bit error probability');
-% legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+disp('Flat fading channel');
+L=1;
+[BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
+
+figure;
+semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
+grid on; 
+title ('BER for Flat fading channel'); 
+xlabel ('SNR in dB');
+ylabel('Bit error probability');
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+saveas(gcf,'./plots/fig2.fig')
+saveas(gcf,'./plots/fig2.eps','epsc')
 
 
-% % frequency selective channel with 2 taps
-% L=2;
-% disp('Frequency selective channel L=2');
-% [BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
-% 
-% figure;
-% semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
-% grid on; 
-% title (sprintf('BER for frequency selective channel with %g taps',L)); 
-% xlabel ('SNR in dB');
-% ylabel('Bit error probability');
-% legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
-% 
+% frequency selective channel with 2 taps
+L=2;
+disp('Frequency selective channel L=2');
+[BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
+
+figure;
+semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
+grid on; 
+title (sprintf('BER for frequency selective channel with %g taps',L)); 
+xlabel ('SNR in dB');
+ylabel('Bit error probability');
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+saveas(gcf,'./plots/fig3.fig')
+saveas(gcf,'./plots/fig3.eps','epsc')
+
 % frequency selective channel with 4 taps
-% L=4;
-% disp('Frequency selective channel L=4');
-% [BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
-% 
-% figure;
-% semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
-% grid on; 
-% title (sprintf('BER for frequency selective channel with %g taps',L)); 
-% xlabel ('SNR in dB');
-% ylabel('Bit error probability');
-% legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+L=4;
+disp('Frequency selective channel L=4');
+[BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
 
-% 
-% 
-% % frequency selective channel with 4 taps but different mu
-% mu=0.05;
-% L=4;
-% disp('Frequency selective channel L=4 for different mu');
-% [BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
-% 
-% figure;
-% semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
-% grid on; 
-% title (sprintf('BER for frequency selective channel with %g taps',L)); 
-% xlabel ('SNR in dB');
-% ylabel('Bit error probability');
-% legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
-% 
-% 
-% % frequency selective channel with 4 taps but different delta
-% mu=0.01;
-% delta=10^-2;
-% L=4;
-% disp('Frequency selective channel L=4 for different delta');
-% [BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
-% 
-% figure;
-% semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
-% grid on; 
-% title (sprintf('BER for frequency selective channel with %g taps',L)); 
-% xlabel ('SNR in dB');
-% ylabel('Bit error probability');
-% legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
-% 
-% % frequency selective channel with 4 taps but different lambda
-% mu=0.01;
-% delta=10^-4;
-% lambda=0.3;
-% L=4;
-% disp('Frequency selective channel L=4 for different lambda');
-% [BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
-% 
-% figure;
-% semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
-% grid on; 
-% title (sprintf('BER for frequency selective channel with %g taps',L)); 
-% xlabel ('SNR in dB');
-% ylabel('Bit error probability');
-% legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+figure;
+semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
+grid on; 
+title (sprintf('BER for frequency selective channel with %g taps',L)); 
+xlabel ('SNR in dB');
+ylabel('Bit error probability');
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+saveas(gcf,'./plots/fig4.fig')
+saveas(gcf,'./plots/fig4.eps','epsc')
 
+
+% frequency selective channel with 4 taps but different mu
+mu=0.05;
+L=4;
+disp('Frequency selective channel L=4 for different mu');
+[BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
+
+figure;
+semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
+grid on; 
+title (sprintf('BER for frequency selective channel with %g taps',L)); 
+xlabel ('SNR in dB');
+ylabel('Bit error probability');
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+saveas(gcf,'./plots/fig5.fig')
+saveas(gcf,'./plots/fig5.eps','epsc')
+
+% frequency selective channel with 4 taps but different beta
+mu=0.01;
+beta=0.3;
+L=4;
+disp('Frequency selective channel L=4 for different beta');
+[BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
+
+figure;
+semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
+grid on; 
+title (sprintf('BER for frequency selective channel with %g taps',L)); 
+xlabel ('SNR in dB');
+ylabel('Bit error probability');
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+saveas(gcf,'./plots/fig6.fig')
+saveas(gcf,'./plots/fig6.eps','epsc')
+
+
+% frequency selective channel with 4 taps but different delta
+mu=0.01;
+delta=10^-2;
+L=4;
+disp('Frequency selective channel L=4 for different delta');
+[BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
+
+figure;
+semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
+grid on; 
+title (sprintf('BER for frequency selective channel with %g taps',L)); 
+xlabel ('SNR in dB');
+ylabel('Bit error probability');
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+saveas(gcf,'./plots/fig7.fig')
+saveas(gcf,'./plots/fig7.eps','epsc')
+
+% frequency selective channel with 4 taps but different lambda
+mu=0.01;
+delta=10^-4;
+lambda=0.3;
+L=4;
+disp('Frequency selective channel L=4 for different lambda');
+[BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
+
+figure;
+semilogy(SNR_vector,BER_LS,'b',SNR_vector,BER_LMS,'r',SNR_vector, BER_NLMS,'k', SNR_vector,BER_RLS,'g');
+grid on; 
+title (sprintf('BER for frequency selective channel with %g taps',L)); 
+xlabel ('SNR in dB');
+ylabel('Bit error probability');
+legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+saveas(gcf,'./plots/fig8.fig')
+saveas(gcf,'./plots/fig8.eps','epsc')
+
+
+% Return to Initial conditions, in order to calculate MSE
+% %                   initializations                                   % %
+
+M=256; 
+% taps of the channel
+L=4;
+
+% for LMS
+% we saw experimentally that mu should be in space 0<mu<0.05 (Conservative
+% approach)
+mu=0.01; 
+
+% for NLMS
+epsilon=10^-4;
+beta=1;
+
+% for RLS
+delta=10^-4;
+lambda=0.98;
+
+% %                   end of initializations                             %%
+
+c=9;
 for SNR=-10:10:10
 
     [MSE_LMS, MSE_NLMS, MSE_RLS] = calculate_MSE(loops, qam, L, N, M, CP_len, channel_var, SNR, mu, delta, lambda, epsilon, beta);
@@ -256,4 +300,7 @@ for SNR=-10:10:10
     ylabel ('MSE');
     xlabel('Iteration')
     legend(sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS \\delta=%g, \\lambda=%g',delta, lambda));
+    saveas(gcf,sprintf('./plots/fig%g.fig',c));
+    saveas(gcf,sprintf('./plots/fig%g.eps',c),'epsc');
+    c=c+1;
 end
