@@ -140,10 +140,11 @@ new = mean(cellfun(@(v)v(1),pos(1:2)));
 set(t(5),'Position',[new,pos{end}(2:end)])
 saveas(gcf,'./plots/fig1.fig')
 saveas(gcf,'./plots/fig1.eps','epsc')
+pause(1);
 
 % % BER
 
-loops=10000;
+loops=10^4;
 SNRdb_min=-10;
 SNRdb_max=20;
 step_db=2;
@@ -163,7 +164,7 @@ ylabel('Bit error probability');
 legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig2.fig')
 saveas(gcf,'./plots/fig2.eps','epsc')
-
+pause(1);
 
 % frequency selective channel with 2 taps
 L=2;
@@ -179,6 +180,7 @@ ylabel('Bit error probability');
 legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig3.fig')
 saveas(gcf,'./plots/fig3.eps','epsc')
+pause(1);
 
 % frequency selective channel with 4 taps
 L=4;
@@ -194,7 +196,7 @@ ylabel('Bit error probability');
 legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig4.fig')
 saveas(gcf,'./plots/fig4.eps','epsc')
-
+pause(1);
 
 % frequency selective channel with 4 taps but different mu
 mu=0.05;
@@ -211,6 +213,7 @@ ylabel('Bit error probability');
 legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig5.fig')
 saveas(gcf,'./plots/fig5.eps','epsc')
+pause(1);
 
 % frequency selective channel with 4 taps but different beta
 mu=0.01;
@@ -228,11 +231,13 @@ ylabel('Bit error probability');
 legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig6.fig')
 saveas(gcf,'./plots/fig6.eps','epsc')
+pause(1);
 
 
 % frequency selective channel with 4 taps but different delta
 mu=0.01;
 delta=10^-2;
+beta=1;
 L=4;
 disp('Frequency selective channel L=4 for different delta');
 [BER_LS, BER_LMS, BER_NLMS, BER_RLS] = calculate_BER(loops, qam, L, N, M, CP_len, channel_var, SNR_vector, mu, delta, lambda, epsilon, beta);
@@ -246,9 +251,12 @@ ylabel('Bit error probability');
 legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig7.fig')
 saveas(gcf,'./plots/fig7.eps','epsc')
+pause(1);
+
 
 % frequency selective channel with 4 taps but different lambda
 mu=0.01;
+beta=1;
 delta=10^-4;
 lambda=0.3;
 L=4;
@@ -264,6 +272,8 @@ ylabel('Bit error probability');
 legend('LS',sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
 saveas(gcf,'./plots/fig8.fig')
 saveas(gcf,'./plots/fig8.eps','epsc')
+pause(1);
+
 
 
 % Return to Initial conditions, in order to calculate MSE
@@ -288,6 +298,7 @@ lambda=0.98;
 
 % %                   end of initializations                             %%
 
+
 c=9;
 for SNR=-10:10:10
     fprintf('MSE for SNR %d\n',SNR);
@@ -303,4 +314,30 @@ for SNR=-10:10:10
     saveas(gcf,sprintf('./plots/fig%g.fig',c));
     saveas(gcf,sprintf('./plots/fig%g.eps',c),'epsc');
     c=c+1;
+    pause(1);
 end
+
+
+delta=10^-2;
+
+c=12;
+for SNR=-10:10:10
+    fprintf('MSE for SNR %d\n',SNR);
+    [MSE_LMS, MSE_NLMS, MSE_RLS] = calculate_MSE(loops, qam, L, N, M, CP_len, channel_var, SNR, mu, delta, lambda, epsilon, beta);
+
+    figure;
+    semilogy(1:M, MSE_LMS,'r',1:M, MSE_NLMS,'k',1:M, MSE_RLS,'g');
+    grid on; 
+    title (sprintf('MSE for SNR=%d',SNR));
+    ylabel ('MSE');
+    xlabel('Iteration')
+    legend(sprintf('LMS \\mu=%g',mu),sprintf('NLMS \\beta=%g',beta), sprintf('RLS  \\delta=%g, \\lambda=%g',delta, lambda));
+    saveas(gcf,sprintf('./plots/fig%g.fig',c));
+    saveas(gcf,sprintf('./plots/fig%g.eps',c),'epsc');
+    c=c+1;
+    pause(1);
+end
+
+
+
+
